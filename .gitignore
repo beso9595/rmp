@@ -1,0 +1,16 @@
+.project
+.classpath
+*.iml
+
+.idea/*
+*/.idea/*
+*/*/.idea/*
+*/*/*/.idea/*
+
+*/nbproject/private/*
+*/*/nbproject/private/*
+*/*/*/nbproject/private/*
+
+*/.settings/*
+*/*/.settings/*
+*/*/*/.settings/*
