@@ -8,6 +8,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
+import static java.lang.Integer.parseInt;
+
 public class Main {
 
     private static File folder = new File("/home/beso9595/Music");
@@ -18,8 +20,26 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
         load();
-        while (!in.nextLine().equals(":q")) {
-            next();
+        String query;
+        while ((query = in.nextLine()) != null) {
+            if (query.length() > 2) {
+                String command = query.substring(0, 2);
+
+                if (command.equals(":q")) {
+                    break;
+                } else if (command.equals(":i")) {
+                    String[] querySplitted = query.split(" ");
+                    if (querySplitted.length > 1) {
+                        try {
+                            play(Integer.parseInt(querySplitted[1]));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Wrong id format");
+                        }
+                    }
+                }
+            } else {
+                next();
+            }
         }
     }
 
@@ -56,7 +76,7 @@ public class Main {
     private static void play(int n) throws IOException {
         int id = n - 1;
         File file = new File(musicList.get(id).getAbsolutePath());
-        print(file.getName(), id);
+        print(file.getName(), id + 1);
         if (Desktop.isDesktopSupported()) {
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
