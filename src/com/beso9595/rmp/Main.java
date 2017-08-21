@@ -4,11 +4,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
-
-import static java.lang.Integer.parseInt;
 
 public class Main {
 
@@ -33,7 +30,19 @@ public class Main {
                         try {
                             play(Integer.parseInt(querySplitted[1]));
                         } catch (NumberFormatException e) {
-                            System.out.println("Wrong id format");
+                            System.out.println("\u001B[31mWrong id format\u001B[0m");
+                        }
+                    }
+                } else if (command.equals(":s")) {
+                    String[] querySplitted = query.split(" ");
+                    if (querySplitted.length > 1) {
+                        String str = querySplitted[1];
+                        if (!str.isEmpty()) {
+                            for (File m : musicList) {
+                                if (m.getName().toLowerCase().contains(str.toLowerCase())) {
+                                    print(m.getName(), musicList.indexOf(m), true);
+                                }
+                            }
                         }
                     }
                 }
@@ -76,7 +85,7 @@ public class Main {
     private static void play(int n) throws IOException {
         int id = n - 1;
         File file = new File(musicList.get(id).getAbsolutePath());
-        print(file.getName(), id + 1);
+        print(file.getName(), id, false);
         if (Desktop.isDesktopSupported()) {
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
@@ -84,14 +93,14 @@ public class Main {
                 System.out.println("\u001B[31mFile doesn't exists\u001B[0m");
             }
         }
-
     }
 
-    private static void print(String filename, int id) {
+    private static void print(String filename, int id, boolean search) {
         filename = filename.substring(0, filename.length() - 4);
-        System.out.println("\u001B[35m(\u001B[0m\u001B[33m" + countPlayed + "\u001B[0m/\u001B[34m" + musicList.size() + "\u001B[0m\u001B[35m)\u001B[0m");
-        System.out.println("\u001B[35mID: \u001B[0m\u001B[36m" + id + "\u001B[0m");
-        System.out.println("\u001B[35mMusic: \u001B[0m\u001B[32m" + filename + "\u001B[0m");
+        if (!search) {
+            System.out.println("\u001B[35m(\u001B[0m\u001B[33m" + countPlayed + "\u001B[0m/\u001B[34m" + musicList.size() + "\u001B[0m\u001B[35m)\u001B[0m");
+        }
+        System.out.println("\u001B[36m" + (id + 1) + ": \u001B[0m\u001B[32m" + filename + "\u001B[0m");
     }
 
     private static boolean isPlayed(int n) {
