@@ -3,9 +3,7 @@ package com.beso9595.rmp;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -19,7 +17,7 @@ public class Main {
         load();
         String query;
         while ((query = in.nextLine()) != null) {
-            if (query.length() > 2) {
+            if (query.length() > 1) {
                 String command = query.substring(0, 2);
 
                 if (command.equals(":q")) {
@@ -44,6 +42,20 @@ public class Main {
                                 }
                             }
                         }
+                    }
+                } else if (command.equals(":l")) {
+                    String[] querySplitted = query.split(" ");
+                    ArrayList<File> sortedList = (ArrayList)musicList.clone();
+                    if (querySplitted.length > 1) {
+                        String str = querySplitted[1];
+                        if (!str.isEmpty()) {
+                            if (str.equals("-n")) {
+                                sortedList.sort(Comparator.comparing(File::getName));
+                            }
+                        }
+                    }
+                    for (File m : sortedList) {
+                        print(m.getName(), sortedList.indexOf(m), true);
                     }
                 }
             } else {
