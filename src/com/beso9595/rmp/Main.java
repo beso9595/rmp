@@ -28,7 +28,7 @@ public class Main {
                         try {
                             play(Integer.parseInt(querySplitted[1]));
                         } catch (NumberFormatException e) {
-                            System.out.println("\u001B[31mWrong id format\u001B[0m");
+                            System.out.println(inColor(Message.WRONG_ID_FORMAT, 1));
                         }
                     }
                 } else if (command.equals(":s")) {
@@ -50,6 +50,7 @@ public class Main {
                         String str = querySplitted[1];
                         if (!str.isEmpty()) {
                             if (str.equals("-n")) {
+                                //TODO indexes
                                 sortedList.sort(Comparator.comparing(File::getName));
                             }
                         }
@@ -102,7 +103,7 @@ public class Main {
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
             } else {
-                System.out.println("\u001B[31mFile doesn't exists\u001B[0m");
+                System.out.println(inColor(Message.FILE_DOESNT_EXIST, 1));
             }
         }
     }
@@ -110,9 +111,9 @@ public class Main {
     private static void print(String filename, int id, boolean search) {
         filename = filename.substring(0, filename.length() - 4);
         if (!search) {
-            System.out.println("\u001B[35m(\u001B[0m\u001B[33m" + countPlayed + "\u001B[0m/\u001B[34m" + musicList.size() + "\u001B[0m\u001B[35m)\u001B[0m");
+            System.out.println(inColor("(", 5) + inColor(Integer.toString(countPlayed), 3) + "/" + inColor(Integer.toString(musicList.size()), 4) + inColor(")", 5));
         }
-        System.out.println("\u001B[36m" + (id + 1) + ": \u001B[0m\u001B[32m" + filename + "\u001B[0m");
+        System.out.println(inColor(Integer.toString(id + 1), 6) + ": " + inColor(filename, 2));
     }
 
     private static boolean isPlayed(int n) {
@@ -132,5 +133,15 @@ public class Main {
         }
         //
         played = new boolean[musicList.size()];
+    }
+
+    private static String inColor(String str, int color) {
+        //1 - red
+        //2 - green
+        //3 - yellow
+        //4 - blue
+        //5 - purple
+        //6 - cyan
+        return "\u001B[3" + color + "m" + str + "\u001B[0m";
     }
 }
