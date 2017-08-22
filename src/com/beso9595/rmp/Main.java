@@ -149,8 +149,11 @@ public class Main {
                 }
             }
             played = new boolean[musicList.size()];
+            System.out.println(inColor(Message.WELCOME, 6));
+            System.out.println(inColor(Message.VERSION_TEXT + ": ", 5) + inColor("v" + Message.VERSION, 4));
+            System.out.println(inColor(Message.DEFAULT_PATH, 5) + ": " + folder.getAbsolutePath());
         } else {
-            System.out.println(inColor(Message.INVALID_DEFAULT_DIRECTORY, 1) + ": " + folder.getAbsolutePath());
+            System.out.println(inColor(Message.INVALID_DEFAULT_PATH, 1) + ": " + folder.getAbsolutePath());
         }
 
     }
