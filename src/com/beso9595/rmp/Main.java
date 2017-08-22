@@ -10,11 +10,11 @@ public class Main {
     private static File folder = new File("/home/beso9595/Music");
     private static ArrayList<File> musicList;
     private static boolean[] played;
-    private static int countPlayed = 0;
+    private static int countPlayed;
 
     public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
-        load();
+        init();
         String query;
         while ((query = in.nextLine()) != null) {
             if (query.length() > 1) {
@@ -26,7 +26,7 @@ public class Main {
                     String[] querySplitted = query.split(" ");
                     if (querySplitted.length > 1) {
                         try {
-                            play(Integer.parseInt(querySplitted[1]));
+                            play(Integer.parseInt(querySplitted[1]), true);
                         } catch (NumberFormatException e) {
                             System.out.println(inColor(Message.WRONG_ID_FORMAT, 1));
                         }
@@ -45,7 +45,7 @@ public class Main {
                     }
                 } else if (command.equals(":l")) {
                     String[] querySplitted = query.split(" ");
-                    ArrayList<File> sortedList = (ArrayList)musicList.clone();
+                    ArrayList<File> sortedList = (ArrayList) musicList.clone();
                     if (querySplitted.length > 1) {
                         String str = querySplitted[1];
                         if (!str.isEmpty()) {
@@ -57,6 +57,21 @@ public class Main {
                     for (File m : sortedList) {
                         print(m.getName(), musicList.indexOf(m), true);
                     }
+                } else if (command.equals(":p")) {
+                    String[] querySplitted = query.split(" ");
+                    if (querySplitted.length > 1) {
+                        String str = querySplitted[1];
+                        if (!str.isEmpty()) {
+                            File newDir = new File(str);
+                            if (newDir.isDirectory()) {
+                                folder = newDir;
+                                init();
+                                System.out.println(inColor(Message.SWITCHED_TO_NEW_PATH, 5) + ": " + str);
+                            } else {
+                                System.out.println(inColor(Message.INVALID_PATH, 1) + ": " + str);
+                            }
+                        }
+                    }
                 }
             } else {
                 next();
@@ -66,7 +81,7 @@ public class Main {
 
     private static void next() throws IOException {
         if (isOver()) {
-            load();
+            init();
             countPlayed = 0;
         }
         Random rand = new Random();
@@ -74,7 +89,7 @@ public class Main {
             int n = rand.nextInt(musicList.size()) + 1;
             if (!isPlayed(n)) {
                 makePlayed(n);
-                play(n);
+                play(n, false);
                 break;
             }
         }
@@ -94,10 +109,10 @@ public class Main {
         return true;
     }
 
-    private static void play(int n) throws IOException {
+    private static void play(int n, boolean count) throws IOException {
         int id = n - 1;
         File file = new File(musicList.get(id).getAbsolutePath());
-        print(file.getName(), id, false);
+        print(file.getName(), id, count);
         if (Desktop.isDesktopSupported()) {
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
@@ -107,9 +122,9 @@ public class Main {
         }
     }
 
-    private static void print(String filename, int id, boolean search) {
+    private static void print(String filename, int id, boolean count) {
         filename = filename.substring(0, filename.length() - 4);
-        if (!search) {
+        if (!count) {
             System.out.println(inColor("(", 5) + inColor(Integer.toString(countPlayed), 3) + "/" + inColor(Integer.toString(musicList.size()), 4) + inColor(")", 5));
         }
         System.out.println(inColor(Integer.toString(id + 1), 6) + ": " + inColor(filename, 2));
@@ -119,19 +134,25 @@ public class Main {
         return played[n - 1];
     }
 
-    private static void load() {
-        musicList = new ArrayList<>();
-        //
-        if (folder.listFiles() != null) {
-            for (File listOfFile : folder.listFiles()) {
-                String filename = listOfFile.getName();
-                if (listOfFile.isFile() && (filename.length() > 4) && (filename.substring(filename.length() - (4)).equalsIgnoreCase(".mp3"))) {
-                    musicList.add(listOfFile);
+    private static void init() {
+        folder = new File(System.getProperty("user.home") + "/Music");
+        if (folder.isDirectory()) {
+            countPlayed = 0;
+            musicList = new ArrayList<>();
+
+            if (folder.listFiles() != null) {
+                for (File listOfFile : folder.listFiles()) {
+                    String filename = listOfFile.getName();
+                    if (listOfFile.isFile() && (filename.length() > 4) && (filename.substring(filename.length() - (4)).equalsIgnoreCase(".mp3"))) {
+                        musicList.add(listOfFile);
+                    }
                 }
             }
+            played = new boolean[musicList.size()];
+        } else {
+            System.out.println(inColor(Message.INVALID_DEFAULT_DIRECTORY, 1) + ": " + folder.getAbsolutePath());
         }
-        //
-        played = new boolean[musicList.size()];
+
     }
 
     private static String inColor(String str, int color) {
