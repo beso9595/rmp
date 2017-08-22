@@ -50,13 +50,12 @@ public class Main {
                         String str = querySplitted[1];
                         if (!str.isEmpty()) {
                             if (str.equals("-n")) {
-                                //TODO indexes
                                 sortedList.sort(Comparator.comparing(File::getName));
                             }
                         }
                     }
                     for (File m : sortedList) {
-                        print(m.getName(), sortedList.indexOf(m), true);
+                        print(m.getName(), musicList.indexOf(m), true);
                     }
                 }
             } else {
