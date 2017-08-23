@@ -7,10 +7,12 @@ import java.util.*;
 
 public class Main {
 
-    private static File folder = new File("/home/beso9595/Music");
+//    private static File folder = new File(System.getProperty("user.home") + "/Music");
+    private static File folder = new File(System.getProperty("user.home"));
     private static ArrayList<File> musicList;
     private static boolean[] played;
     private static int countPlayed;
+    private static boolean welcome;
 
     public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
@@ -80,10 +82,6 @@ public class Main {
     }
 
     private static void next() throws IOException {
-        if (isOver()) {
-            init();
-            countPlayed = 0;
-        }
         Random rand = new Random();
         while (true) {
             int n = rand.nextInt(musicList.size()) + 1;
@@ -92,6 +90,10 @@ public class Main {
                 play(n, false);
                 break;
             }
+        }
+        if (isOver()) {
+            System.out.println(inColor(Message.OVER, 1));
+            init();
         }
     }
 
@@ -135,7 +137,6 @@ public class Main {
     }
 
     private static void init() {
-        folder = new File(System.getProperty("user.home") + "/Music");
         if (folder.isDirectory()) {
             countPlayed = 0;
             musicList = new ArrayList<>();
@@ -149,9 +150,12 @@ public class Main {
                 }
             }
             played = new boolean[musicList.size()];
-            System.out.println(inColor(Message.WELCOME, 6));
-            System.out.println(inColor(Message.VERSION_TEXT + ": ", 5) + inColor("v" + Message.VERSION, 4));
-            System.out.println(inColor(Message.DEFAULT_PATH, 5) + ": " + folder.getAbsolutePath());
+            if(!welcome) {
+                System.out.println(inColor(Message.WELCOME, 6));
+                System.out.println(inColor(Message.VERSION_TEXT + ": ", 5) + inColor("v" + Message.VERSION, 4));
+                welcome = true;
+            }
+            System.out.println(inColor(Message.CURRENT_PATH, 5) + ": " + folder.getAbsolutePath());
         } else {
             System.out.println(inColor(Message.INVALID_DEFAULT_PATH, 1) + ": " + folder.getAbsolutePath());
         }
