@@ -7,8 +7,7 @@ import java.util.*;
 
 public class Main {
 
-//    private static File folder = new File(System.getProperty("user.home") + "/Music");
-    private static File folder = new File(System.getProperty("user.home"));
+    private static File folder = new File(System.getProperty("user.home") + "/Music");
     private static ArrayList<File> musicList;
     private static boolean[] played;
     private static int countPlayed;
@@ -30,7 +29,7 @@ public class Main {
                         try {
                             play(Integer.parseInt(querySplitted[1]), true);
                         } catch (NumberFormatException e) {
-                            System.out.println(inColor(Message.WRONG_ID_FORMAT, 1));
+                            System.out.println(inColor(Message.WRONG_NUMBER_FORMAT, 1));
                         }
                     }
                 } else if (command.equals(":s")) {
@@ -74,25 +73,40 @@ public class Main {
                             }
                         }
                     }
+                } else if (command.equals(":j")) {
+                    String[] querySplitted = query.split(" ");
+                    if (querySplitted.length > 1) {
+                        String str = querySplitted[1];
+                        if (!str.isEmpty()) {
+                            try {
+                                int n = Integer.parseInt(querySplitted[1]);
+                                jump(n);
+                            } catch (NumberFormatException e) {
+                                System.out.println(inColor(Message.WRONG_NUMBER_FORMAT, 1));
+                            }
+                        }
+                    }
                 }
             } else {
-                next();
+                next(false);
             }
         }
     }
 
-    private static void next() throws IOException {
+    private static void next(boolean jump) throws IOException {
         Random rand = new Random();
         while (true) {
             int n = rand.nextInt(musicList.size()) + 1;
             if (!isPlayed(n)) {
                 makePlayed(n);
-                play(n, false);
+                if (!jump) {
+                    play(n, false);
+                }
                 break;
             }
         }
         if (isOver()) {
-            System.out.println(inColor(Message.OVER, 1));
+            System.out.println("\n" + inColor(Message.LIST_IS_OVER, 1));
             init();
         }
     }
@@ -111,6 +125,18 @@ public class Main {
         return true;
     }
 
+    private static void jump(int n) throws IOException {
+        int notPlayed = musicList.size() - countPlayed;
+        if (notPlayed > n) {
+            for (int i = 0; i < n; i++) {
+                next(true);
+            }
+            printcounts();
+        } else {
+            System.out.println(inColor(Message.MUST_BE_LESS, 1));
+        }
+    }
+
     private static void play(int n, boolean count) throws IOException {
         int id = n - 1;
         File file = new File(musicList.get(id).getAbsolutePath());
@@ -127,9 +153,13 @@ public class Main {
     private static void print(String filename, int id, boolean count) {
         filename = filename.substring(0, filename.length() - 4);
         if (!count) {
-            System.out.println(inColor("(", 5) + inColor(Integer.toString(countPlayed), 3) + "/" + inColor(Integer.toString(musicList.size()), 4) + inColor(")", 5));
+            printcounts();
         }
         System.out.println(inColor(Integer.toString(id + 1), 6) + ": " + inColor(filename, 2));
+    }
+
+    private static void printcounts() {
+        System.out.println(inColor("(", 5) + inColor(Integer.toString(countPlayed), 3) + "/" + inColor(Integer.toString(musicList.size()), 4) + inColor(")", 5));
     }
 
     private static boolean isPlayed(int n) {
@@ -150,7 +180,7 @@ public class Main {
                 }
             }
             played = new boolean[musicList.size()];
-            if(!welcome) {
+            if (!welcome) {
                 System.out.println(inColor(Message.WELCOME, 6));
                 System.out.println(inColor(Message.VERSION_TEXT + ": ", 5) + inColor("v" + Message.VERSION, 4));
                 welcome = true;
