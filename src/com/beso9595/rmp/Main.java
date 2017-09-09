@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Main {
 
-    private static File folder = new File(System.getProperty("user.home") + "/Music");
+    private static File folder = new File(System.getProperty("user.home") + File.separator + "Music");
     private static ArrayList<File> musicList;
     private static boolean[] played;
     private static int countPlayed;
@@ -159,7 +159,7 @@ public class Main {
     }
 
     private static void printcounts() {
-        System.out.println(inColor("(", 5) + inColor(Integer.toString(countPlayed), 3) + "/" + inColor(Integer.toString(musicList.size()), 4) + inColor(")", 5));
+        System.out.println("(" + inColor(Integer.toString(countPlayed), 3) + "/" + inColor(Integer.toString(musicList.size()), 4) + ")");
     }
 
     private static boolean isPlayed(int n) {
