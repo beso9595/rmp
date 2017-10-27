@@ -20,72 +20,84 @@ public class Main {
         while ((query = in.nextLine()) != null) {
             if (query.length() > 1) {
                 String command = query.substring(0, 2);
+                boolean quit = false;
+                String[] querySplitted;
 
-                if (command.equals(":q")) {
-                    break;
-                } else if (command.equals(":i")) {
-                    String[] querySplitted = query.split(" ");
-                    if (querySplitted.length > 1) {
-                        try {
-                            play(Integer.parseInt(querySplitted[1]), true);
-                        } catch (NumberFormatException e) {
-                            System.out.println(inColor(Message.WRONG_NUMBER_FORMAT, 1));
-                        }
-                    }
-                } else if (command.equals(":s")) {
-                    String[] querySplitted = query.split(" ");
-                    if (querySplitted.length > 1) {
-                        String str = querySplitted[1];
-                        if (!str.isEmpty()) {
-                            for (File m : musicList) {
-                                if (m.getName().toLowerCase().contains(str.toLowerCase())) {
-                                    print(m.getName(), musicList.indexOf(m), true);
-                                }
-                            }
-                        }
-                    }
-                } else if (command.equals(":l")) {
-                    String[] querySplitted = query.split(" ");
-                    ArrayList<File> sortedList = (ArrayList) musicList.clone();
-                    if (querySplitted.length > 1) {
-                        String str = querySplitted[1];
-                        if (!str.isEmpty()) {
-                            if (str.equals("-n")) {
-                                sortedList.sort(Comparator.comparing(File::getName));
-                            }
-                        }
-                    }
-                    for (File m : sortedList) {
-                        print(m.getName(), musicList.indexOf(m), true);
-                    }
-                } else if (command.equals(":p")) {
-                    String[] querySplitted = query.split(" ");
-                    if (querySplitted.length > 1) {
-                        String str = querySplitted[1];
-                        if (!str.isEmpty()) {
-                            File newDir = new File(str);
-                            if (newDir.isDirectory()) {
-                                folder = newDir;
-                                init();
-                                System.out.println(inColor(Message.SWITCHED_TO_NEW_PATH, 5) + ": " + str);
-                            } else {
-                                System.out.println(inColor(Message.INVALID_PATH, 1) + ": " + str);
-                            }
-                        }
-                    }
-                } else if (command.equals(":j")) {
-                    String[] querySplitted = query.split(" ");
-                    if (querySplitted.length > 1) {
-                        String str = querySplitted[1];
-                        if (!str.isEmpty()) {
+                switch (command.toLowerCase()) {
+                    case ":q":
+                        quit = true;
+                        break;
+                    case ":i":
+                        querySplitted = query.split(" ");
+                        if (querySplitted.length > 1) {
                             try {
-                                int n = Integer.parseInt(querySplitted[1]);
-                                jump(n);
+                                play(Integer.parseInt(querySplitted[1]), true);
                             } catch (NumberFormatException e) {
                                 System.out.println(inColor(Message.WRONG_NUMBER_FORMAT, 1));
                             }
                         }
-                    }
+                        break;
+                    case ":s":
+                        querySplitted = query.split(" ");
+                        if (querySplitted.length > 1) {
+                            String str = querySplitted[1];
+                            if (!str.isEmpty()) {
+                                for (File m : musicList) {
+                                    if (m.getName().toLowerCase().contains(str.toLowerCase())) {
+                                        print(m.getName(), musicList.indexOf(m), true);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case ":l":
+                        querySplitted = query.split(" ");
+                        ArrayList<File> sortedList = (ArrayList) musicList.clone();
+                        if (querySplitted.length > 1) {
+                            String str = querySplitted[1];
+                            if (!str.isEmpty()) {
+                                if (str.equals("-n")) {
+                                    sortedList.sort(Comparator.comparing(File::getName));
+                                }
+                            }
+                        }
+                        for (File m : sortedList) {
+                            print(m.getName(), musicList.indexOf(m), true);
+                        }
+                        break;
+                    case ":p":
+                        querySplitted = query.split(" ");
+                        if (querySplitted.length > 1) {
+                            String str = querySplitted[1];
+                            if (!str.isEmpty()) {
+                                File newDir = new File(str);
+                                if (newDir.isDirectory()) {
+                                    folder = newDir;
+                                    init();
+                                    System.out.println(inColor(Message.SWITCHED_TO_NEW_PATH, 5) + ": " + str);
+                                } else {
+                                    System.out.println(inColor(Message.INVALID_PATH, 1) + ": " + str);
+                                }
+                            }
+                        }
+                        break;
+                    case ":j":
+                        querySplitted = query.split(" ");
+                        if (querySplitted.length > 1) {
+                            String str = querySplitted[1];
+                            if (!str.isEmpty()) {
+                                try {
+                                    int n = Integer.parseInt(querySplitted[1]);
+                                    jump(n);
+                                } catch (NumberFormatException e) {
+                                    System.out.println(inColor(Message.WRONG_NUMBER_FORMAT, 1));
+                                }
+                            }
+                        }
+                        break;
+                }
+                if (quit) {
+                    break;
                 }
             } else {
                 next(false);
@@ -131,7 +143,7 @@ public class Main {
             for (int i = 0; i < n; i++) {
                 next(true);
             }
-            printcounts();
+            printCounts();
         } else {
             System.out.println(inColor(Message.MUST_BE_LESS, 1));
         }
@@ -153,12 +165,12 @@ public class Main {
     private static void print(String filename, int id, boolean count) {
         filename = filename.substring(0, filename.length() - 4);
         if (!count) {
-            printcounts();
+            printCounts();
         }
         System.out.println(inColor(Integer.toString(id + 1), 6) + ": " + inColor(filename, 2));
     }
 
-    private static void printcounts() {
+    private static void printCounts() {
         System.out.println("(" + inColor(Integer.toString(countPlayed), 3) + "/" + inColor(Integer.toString(musicList.size()), 4) + ")");
     }
 
@@ -179,13 +191,16 @@ public class Main {
                     }
                 }
             }
-            played = new boolean[musicList.size()];
             if (!welcome) {
                 System.out.println(inColor(Message.WELCOME, 6));
                 System.out.println(inColor(Message.VERSION_TEXT + ": ", 5) + inColor("v" + Message.VERSION, 4));
+                System.out.println(inColor(Message.CURRENT_PATH, 5) + ": " + folder.getAbsolutePath());
                 welcome = true;
             }
-            System.out.println(inColor(Message.CURRENT_PATH, 5) + ": " + folder.getAbsolutePath());
+            played = new boolean[musicList.size()];
+            if (musicList.isEmpty()) {
+                System.out.println(inColor(Message.EMPTY_DIR, 1) + ": " + folder.getAbsolutePath());
+            }
         } else {
             System.out.println(inColor(Message.INVALID_DEFAULT_PATH, 1) + ": " + folder.getAbsolutePath());
         }
