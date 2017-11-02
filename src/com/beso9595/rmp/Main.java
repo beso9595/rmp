@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Main {
 
-    private static File folder = new File(System.getProperty("user.home") + File.separator + "Music");
+    private static File folder = new File(System.getProperty("user.home") + File.separator + "Downloads");
     private static ArrayList<File> musicList;
     private static boolean[] played;
     private static int countPlayed;
