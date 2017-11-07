@@ -13,7 +13,6 @@ public interface Message {
     public static final String LIST_IS_OVER = "List is over, choose new path or repeat the current";
     public static final String MUST_BE_LESS = "Must be less then non-played songs quantity";
     public static final String EMPTY_DIR = "Not a single *.mp3 format file was found in directory";
-    //public static final String EMPTY_DIR = "Not a single *.mp3 format file was found in directory";
 
     public static final String VERSION = "1.1";
     public static final String WELCOME = "\n" +
