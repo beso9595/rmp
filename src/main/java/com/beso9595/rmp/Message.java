@@ -3,19 +3,19 @@ package com.beso9595.rmp;
 
 public interface Message {
 
-    public static final String VERSION_TEXT = "Version";
-    public static final String WRONG_NUMBER_FORMAT = "Wrong number format";
-    public static final String FILE_DOESNT_EXIST = "File doesn't exists";
-    public static final String INVALID_PATH = "Invalid path";
-    public static final String SWITCHED_TO_NEW_PATH = "Switched to new path";
-    public static final String CURRENT_PATH = "Current path";
-    public static final String INVALID_DEFAULT_PATH = "Invalid default path";
-    public static final String LIST_IS_OVER = "List is over, choose new path or repeat the current";
-    public static final String MUST_BE_LESS = "Must be less then non-played songs quantity";
-    public static final String EMPTY_DIR = "Not a single *.mp3 format file was found in directory";
+    String VERSION_TEXT = "Version";
+    String WRONG_NUMBER_FORMAT = "Wrong number format";
+    String FILE_DOESNT_EXIST = "File doesn't exists";
+    String INVALID_PATH = "Invalid path";
+    String SWITCHED_TO_NEW_PATH = "Switched to new path";
+    String CURRENT_PATH = "Current path";
+    String INVALID_DEFAULT_PATH = "Invalid default path";
+    String LIST_IS_OVER = "List is over, choose new path or repeat the current";
+    String MUST_BE_LESS = "Must be less then non-played songs quantity";
+    String EMPTY_DIR = "Not a single *.mp3 format file was found in directory";
 
-    public static final String VERSION = "1.2";
-    public static final String WELCOME = "\n" +
+    String VERSION = "1.3";
+    String WELCOME = "\n" +
             "  ___ __  __ ___ \n" +
             " | _ \\  \\/  | _ \\\n" +
             " |   / |\\/| |  _/\n" +

@@ -3,6 +3,7 @@ package com.beso9595.rmp;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Main {
@@ -12,6 +13,7 @@ public class Main {
     private static boolean[] played;
     private static int countPlayed;
     private static boolean welcome;
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
     public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
@@ -44,7 +46,7 @@ public class Main {
                             if (!str.isEmpty()) {
                                 for (File m : musicList) {
                                     if (m.getName().toLowerCase().contains(str.toLowerCase())) {
-                                        print(m.getName(), musicList.indexOf(m), true);
+                                        print(m, musicList.indexOf(m), true);
                                     }
                                 }
                             }
@@ -62,7 +64,7 @@ public class Main {
                             }
                         }
                         for (File m : sortedList) {
-                            print(m.getName(), musicList.indexOf(m), true);
+                            print(m, musicList.indexOf(m), true);
                         }
                         break;
                     case ":p":
@@ -152,7 +154,7 @@ public class Main {
     private static void play(int n, boolean count) throws IOException {
         int id = n - 1;
         File file = new File(musicList.get(id).getAbsolutePath());
-        print(file.getName(), id, count);
+        print(file, id, count);
         if (Desktop.isDesktopSupported()) {
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
@@ -162,12 +164,13 @@ public class Main {
         }
     }
 
-    private static void print(String filename, int id, boolean count) {
-        filename = filename.substring(0, filename.length() - 4);
+    private static void print(File file, int id, boolean count) {
+        String fileName = file.getName();
+        fileName = fileName.substring(0, fileName.length() - 4);
         if (!count) {
             printCounts();
         }
-        System.out.println(inColor(Integer.toString(id + 1), 6) + ": " + inColor(filename, 2));
+        System.out.println(inColor(Integer.toString(id + 1), 6) + ": " + inColor(dateFormat.format(new Date(file.lastModified())), 5) + " - " + inColor(fileName, 2));
     }
 
     private static void printCounts() {
